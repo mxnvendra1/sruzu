@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will you be my Valentine?</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            background: linear-gradient(135deg, #ffc0cb 0%, #ffb6c1 50%, #ffafbd 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating hearts animation */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 105, 180, 0.6);
+            animation: float-up 8s infinite ease-in;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .image-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .bear-image {
+            max-width: 90vw;
+            max-height: 40vh;
+            width: auto;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            object-fit: contain;
+        }
+
+        .success-image {
+            max-width: 90vw;
+            max-height: 50vh;
+            width: auto;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            object-fit: contain;
+        }
+
+        /* Sparkle hearts around image */
+        .sparkle-heart {
+            position: absolute;
+            font-size: 24px;
+            animation: sparkle 1.5s infinite ease-in-out;
+        }
+
+        .sparkle-heart:nth-child(1) {
+            top: -10px;
+            left: -10px;
+            animation-delay: 0s;
+        }
+
+        .sparkle-heart:nth-child(2) {
+            top: -10px;
+            right: -10px;
+            animation-delay: 0.3s;
+        }
+
+        .sparkle-heart:nth-child(3) {
+            bottom: -10px;
+            left: -10px;
+            animation-delay: 0.6s;
+        }
+
+        .sparkle-heart:nth-child(4) {
+            bottom: -10px;
+            right: -10px;
+            animation-delay: 0.9s;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .title {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin: 1rem 0;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        }
+
+        .success-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: bold;
+            margin: 1rem 0;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .button-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: 1rem;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .btn-yes:hover {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            transform: scale(1.05);
+        }
+
+        .btn-yes:active {
+            transform: scale(0.95);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            font-size: 1rem !important;
+        }
+
+        .btn-no:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: scale(1.05);
+        }
+
+        .btn-no:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .bear-image {
+                max-height: 30vh;
+            }
+
+            .success-image {
+                max-height: 35vh;
+            }
+
+            .title {
+                font-size: clamp(1.2rem, 4vw, 1.8rem);
+            }
+
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .sparkle-heart {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bear-image {
+                max-height: 25vh;
+            }
+
+            .success-image {
+                max-height: 30vh;
+            }
+
+            .button-container {
+                gap: 0.5rem;
+            }
+
+            .heart {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="hearts"></div>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Create floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            document.getElementById('hearts').appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 8000);
+        }
+
+        // Generate hearts periodically
+        setInterval(createHeart, 300);
+
+        function ValentinePage() {
+            const [noCount, setNoCount] = useState(0);
+            const [yesPressed, setYesPressed] = useState(false);
+            const yesButtonSize = noCount * 20 + 16;
+
+            const handleNoClick = () => {
+                setNoCount(noCount + 1);
+            };
+
+            const getNoButtonText = () => {
+                const phrases = [
+                    "No",
+                    "Are you sure sruzu?",
+                    "Really sure?",
+                    "Think again! , Its Maan",
+                    "Last chance to be maghra queen!",
+                    "Surely not?",
+                    "You might regret this!",
+                    "Did you forgot the bangalore trip?",
+                    "Kartik would be so disappointed",
+                    "Have a heart!",
+                    "Don't be so cold!",
+                    "Change of heart?",
+                    "Wouldn't you reconsider?",
+                    "Is that your final answer?",
+                    "Fuck You, You're just like Mingma",
+                ];
+
+                return phrases[Math.min(noCount, phrases.length - 1)];
+            };
+
+            return (
+                <div className="container">
+                    {yesPressed ? (
+                        <>
+                            <div className="image-wrapper">
+                                <div className="sparkle-heart">💕</div>
+                                <div className="sparkle-heart">💕</div>
+                                <div className="sparkle-heart">💕</div>
+                                <div className="sparkle-heart">💕</div>
+                                <img className="success-image" src="https://github.com/mxnvendra1/sruzu/blob/main/sruzu%20loves%20this%20image.png?raw=true" alt="Sruzu and Maan" />
+                            </div>
+                            <div className="success-text">Ok yay!!! 💖</div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="image-wrapper">
+                                <div className="sparkle-heart">💖</div>
+                                <div className="sparkle-heart">💖</div>
+                                <div className="sparkle-heart">💖</div>
+                                <div className="sparkle-heart">💖</div>
+                                <img className="bear-image" src="https://raw.githubusercontent.com/mxnvendra1/sruzu/e31222d52226ac9b8cba424a4e6c29c0d8e61f4c/sruzu%20in%20cafe.png" alt="Sruzu" />
+                            </div>
+                            <h1 className="title">Will you be my Valentine Sruzu? 💝</h1>
+                            <div className="button-container">
+                                <button
+                                    className="btn btn-yes"
+                                    style={{ fontSize: yesButtonSize + 'px' }}
+                                    onClick={() => setYesPressed(true)}
+                                >
+                                    Yes
+                                </button>
+                                <button
+                                    onClick={handleNoClick}
+                                    className="btn btn-no"
+                                >
+                                    {noCount === 0 ? "No" : getNoButtonText()}
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ValentinePage />);
+    </script>
+</body>
+</html>
