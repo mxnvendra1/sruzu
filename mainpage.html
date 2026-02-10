@@ -293,7 +293,15 @@
         function ValentinePage() {
             const [noCount, setNoCount] = useState(0);
             const [yesPressed, setYesPressed] = useState(false);
+            const [imageLoaded, setImageLoaded] = useState(false);
             const yesButtonSize = noCount * 20 + 16;
+
+            // Preload the success image when component mounts
+            useEffect(() => {
+                const img = new Image();
+                img.onload = () => setImageLoaded(true);
+                img.src = "https://github.com/mxnvendra1/sruzu/blob/main/sruzu%20loves%20this%20image.png?raw=true";
+            }, []);
 
             const handleNoClick = () => {
                 setNoCount(noCount + 1);
@@ -311,10 +319,8 @@
                     "Did you forgot the bangalore trip?",
                     "Kartik would be so disappointed",
                     "Have a heart!",
-                    "Don't be so cold!",
-                    "Change of heart?",
+                    "Don't be so cold bbg!",
                     "Wouldn't you reconsider?",
-                    "Is that your final answer?",
                     "Fuck You, You're just like Mingma",
                 ];
 
@@ -332,7 +338,7 @@
                                 <div className="sparkle-heart">💕</div>
                                 <img className="success-image" src="https://github.com/mxnvendra1/sruzu/blob/main/sruzu%20loves%20this%20image.png?raw=true" alt="Sruzu and Maan" />
                             </div>
-                            <div className="success-text">Ok yay!!! 💖</div>
+                            <div className="success-text">Ok yay!!! I guess beggars can't be choosers 💖</div>
                         </>
                     ) : (
                         <>
